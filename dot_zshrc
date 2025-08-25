@@ -1,0 +1,120 @@
+# Uncomment to enable profiling (also line at end of file)
+#zmodload zsh/zprof
+
+# Setup zinit, downloading if needed
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [ ! -d "$ZINIT_HOME" ]; then
+	mkdir -p "$(dirname $ZINIT_HOME)"
+	git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Set PATH, this should probably be done in a .profile or similar
+if [[ ! "$PATH" == */home/mcribbs/.local/bin* ]]; then
+  PATH="${PATH:+${PATH}:}/home/mcribbs/.local/bin"
+fi
+
+# Load plugins
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light softmoth/zsh-vim-mode
+zinit light Aloxaf/fzf-tab
+zinit snippet OMZP::sudo
+zinit snippet OMZP::dotenv
+zinit snippet OMZP::colored-man-pages
+# These seem to add a shitton of aliases that I'm not sure I can remember
+#zinit snippet OMZP::git
+#zinit snippet OMZP::aws
+#zinit snippet OMZP::kubectl
+#zinit snippet OMZP::npm
+#zinit snippet OMZP::tmux
+#zinit snippet OMZP::docker
+# Useful for prompts? Does oh my posh do this or need this?
+#zinit snippet OMZP::kubectx
+#zinit snippet OMZP::nodenv
+
+# Configure history
+HISTSIZE=5001
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUPE=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Configure vi mode
+VIM_MODE_TRACK_KEYMAP=no # Disable all tracking of editing keymap, cursor styling, prompt indicators,
+MODE_CURSOR_VIINS="#00ff00 blinking bar"
+MODE_CURSOR_REPLACE="$MODE_CURSOR_VIINS #ff0000"
+MODE_CURSOR_VICMD="green block"
+MODE_CURSOR_SEARCH="#ff00ff steady underline"
+MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
+
+# Install fzf
+if [[ ! "$PATH" == */home/mcribbs/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}/home/mcribbs/.fzf/bin"
+fi
+source <(fzf --zsh)
+
+# Setup zoxide
+eval "$(zoxide init --cmd cd zsh)"
+
+# Use BASE16 color system - probaby replace with zinit
+#BASE16_SHELL=$HOME/.config/base16-shell/
+#[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+# Load completions, only rebuild if the zcompdump file is older then 24 hours
+[ ! "$(find ~/.zcompdump -mtime 1)" ] || compinit
+compinit -C
+zinit cdreplay -q
+
+# Completion stylings
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# Setup Oh My Posh prompt if installed
+[[ ! -f ~/.local/bin/oh-my-posh ]] || eval "$(~/.local/bin/oh-my-posh init zsh --config $HOME/.config/ohmyposh/mcribbs.toml)"
+
+# Keybindings
+bindkey -v
+bindkey "${terminfo[kcuu1]}" history-search-backward
+bindkey "${terminfo[kcud1]}" history-search-forward
+
+# Load aliases
+
+source $HOME/.alias
+
+# Setup pnpm
+export PNPM_HOME="/home/mcribbs/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# Print welcome message only for login shells
+if [[ -o login ]]; then
+  source $HOME/.welcome
+fi
+
+# Start tmux if we're ssh
+#if [[ -z $TMUX && -n $SSH_TTY ]]; then
+  #me=$(whoami)
+#
+  #if tmux has-session -t $me 2>/dev/null; then
+      #exec tmux -2 attach-session -t $me
+  #else
+      #exec tmux -2 new-session -s $me
+  #fi
+#fi
+
+# Uncomment to enable profiling (also line at start of file)
+#zprof
