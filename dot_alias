@@ -1,0 +1,46 @@
+# Make some possibly destructive commands more interactive.
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# Add some easy shortcuts for formatted directory listings and add a touch of color.
+alias ls='ls --color'
+alias ll='ls -l --color'
+alias la='ls -la --color'
+[[ -x gls ]] && alias ls='gls -hF --color=auto'          # add colors for filetype recognition
+alias tree='tree -Csu'     # nice alternative to 'recursive ls'
+
+# Make grep more user friendly by highlighting matches
+# and exclude grepping through .svn and .git folders.
+alias grep='grep --color=auto --exclude="*\.{svn,git}*"'
+
+# Convenience shortcuts
+alias mkdir='mkdir -p'
+alias h='history'
+alias j='jobs -l'
+alias c='clear; source ~/.welcome'
+alias which='type -a'
+alias path='echo -e ${PATH//:/\\n}'
+
+# Makes a more readable output.
+alias du='du -kh'
+alias df='df -kTh'
+
+# Override some tools with nicer versions
+if [[ -x htop ]]; then
+  alias top='htop'
+fi
+alias npm='pnpm'
+#alias vi='nvim'
+#alias vim='nvim'
+#alias gvi='open -a Neovim --args --cwd "$PWD" "$@"'
+#alias gvim='open -a Neovim --args --cwd "$PWD" "$@"'
+#alias spacemacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+
+# force 256 color mode for tmux sessions
+alias tmux='tmux -2'
+
+#detach instead of exit session if in tmux
+if [ -n "$SSH_TTY" ]; then
+  alias exit='tmux detach'
+fi

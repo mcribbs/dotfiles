@@ -1,0 +1,6 @@
+echo
+#hostname | figlet -w 110 -f big
+fortune -s | cowsay -n
+echo
+uptime
+echo
