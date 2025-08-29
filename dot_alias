@@ -41,6 +41,6 @@ alias npm='pnpm'
 alias tmux='tmux -2'
 
 #detach instead of exit session if in tmux
-if [ -n "$SSH_TTY" ]; then
-  alias exit='tmux detach'
-fi
+#if [ -n "$SSH_TTY" ]; then
+  #alias exit='tmux detach'
+#fi
