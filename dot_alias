@@ -35,7 +35,6 @@ alias npm='pnpm'
 #alias vim='nvim'
 #alias gvi='open -a Neovim --args --cwd "$PWD" "$@"'
 #alias gvim='open -a Neovim --args --cwd "$PWD" "$@"'
-#alias spacemacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
 
 # force 256 color mode for tmux sessions
 alias tmux='tmux -2'
