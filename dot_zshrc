@@ -63,7 +63,7 @@ fi
 source <(fzf --zsh)
 
 # Setup zoxide
-eval "$(zoxide init --cmd cd zsh)"
+#eval "$(zoxide init --cmd cd zsh)"
 
 # Use BASE16 color system - probaby replace with zinit
 #BASE16_SHELL=$HOME/.config/base16-shell/
