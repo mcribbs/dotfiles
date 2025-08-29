@@ -10,8 +10,8 @@ fi
 source "${ZINIT_HOME}/zinit.zsh"
 
 # Set PATH, this should probably be done in a .profile or similar
-if [[ ! "$PATH" == */home/mcribbs/.local/bin* ]]; then
-  PATH="${PATH:+${PATH}:}/home/mcribbs/.local/bin"
+if [[ ! "$PATH" == *$HOME/.local/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.local/bin"
 fi
 
 # Load plugins
@@ -57,8 +57,8 @@ MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
 MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
 # Install fzf
-if [[ ! "$PATH" == */home/mcribbs/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}/home/mcribbs/.fzf/bin"
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 source <(fzf --zsh)
 
@@ -95,7 +95,7 @@ bindkey "${terminfo[kcud1]}" history-search-forward
 source $HOME/.alias
 
 # Setup pnpm
-export PNPM_HOME="/home/mcribbs/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
