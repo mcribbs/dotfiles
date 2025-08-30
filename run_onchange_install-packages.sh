@@ -8,7 +8,7 @@ sudo apt install zsh
 chsh -s $(which zsh)
 
 # Oh my posh prompt
-curl -s https://ohmyposh.dev/install.sh | bash -s
+curl -s https://ohmyposh.dev/install.sh | bash -s -d ~/.local/bin
 
 # fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
