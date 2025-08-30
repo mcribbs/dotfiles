@@ -9,17 +9,31 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
+# Install fzf
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
+fi
+source <(fzf --zsh)
+
 # Set PATH, this should probably be done in a .profile or similar
 if [[ ! "$PATH" == *$HOME/.local/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.local/bin"
 fi
 
-# Load plugins
+# Load completions, only rebuild if the zcompdump file is older then 24 hours
+autoload -Uz compinit
+[ ! "$(find ~/.zcompdump -mtime 1)" ] || compinit
+compinit -C
+zinit cdreplay -q
+
+# Must load AFTER compinit but before autosuggest and syntax-highlighting
+zinit light Aloxaf/fzf-tab 
+
+# Load other plugins
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light softmoth/zsh-vim-mode
-zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::sudo
 zinit snippet OMZP::dotenv
 zinit snippet OMZP::colored-man-pages
@@ -56,24 +70,12 @@ MODE_CURSOR_SEARCH="#ff00ff steady underline"
 MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
 MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
-# Install fzf
-if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
-fi
-source <(fzf --zsh)
-
 # Setup zoxide
 #eval "$(zoxide init --cmd cd zsh)"
 
 # Use BASE16 color system - probaby replace with zinit
 #BASE16_SHELL=$HOME/.config/base16-shell/
 #[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-
-# Load completions, only rebuild if the zcompdump file is older then 24 hours
-autoload -Uz compinit
-[ ! "$(find ~/.zcompdump -mtime 1)" ] || compinit
-compinit -C
-zinit cdreplay -q
 
 # Completion stylings
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
