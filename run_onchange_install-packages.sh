@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/end bash
 set -euo pipefail
 
 echo "Updating package lists..."
