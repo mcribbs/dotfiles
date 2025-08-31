@@ -59,4 +59,4 @@ else
   echo "cowsay already installed"
 fi
 
-source .zshrc
+source ~/.zshrc
