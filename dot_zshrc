@@ -1,5 +1,5 @@
 # Uncomment to enable profiling (also line at end of file)
-zmodload zsh/zprof
+#zmodload zsh/zprof
 
 # Setup zinit, downloading if needed
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -74,8 +74,8 @@ MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 #eval "$(zoxide init --cmd cd zsh)"
 
 # Use BASE16 color system - probaby replace with zinit
-#BASE16_SHELL=$HOME/.config/base16-shell/
-#[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 # Completion stylings
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -120,4 +120,4 @@ fi
 #fi
 
 # Uncomment to enable profiling (also line at start of file)
-zprof
+#zprof
