@@ -1,5 +1,5 @@
 # Uncomment to enable profiling (also line at end of file)
-#zmodload zsh/zprof
+zmodload zsh/zprof
 
 # Setup zinit, downloading if needed
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -120,4 +120,4 @@ fi
 #fi
 
 # Uncomment to enable profiling (also line at start of file)
-#zprof
+zprof
