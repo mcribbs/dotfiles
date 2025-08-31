@@ -58,3 +58,5 @@ if ! command -v cowsay >/dev/null 2>&1; then
 else
   echo "cowsay already installed"
 fi
+
+source .zshrc
