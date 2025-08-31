@@ -44,9 +44,6 @@ zinit snippet OMZP::colored-man-pages
 #zinit snippet OMZP::npm
 #zinit snippet OMZP::tmux
 #zinit snippet OMZP::docker
-# Useful for prompts? Does oh my posh do this or need this?
-#zinit snippet OMZP::kubectx
-#zinit snippet OMZP::nodenv
 
 # Configure history
 HISTSIZE=5001
@@ -71,11 +68,7 @@ MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
 MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
 # Setup zoxide
-#eval "$(zoxide init --cmd cd zsh)"
-
-# Use BASE16 color system - probaby replace with zinit
-BASE16_SHELL=$HOME/.config/base16-shell/
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+eval "$(zoxide init --cmd cd zsh)"
 
 # Completion stylings
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -93,7 +86,6 @@ bindkey "${terminfo[kcuu1]}" history-search-backward
 bindkey "${terminfo[kcud1]}" history-search-forward
 
 # Load aliases
-
 source $HOME/.alias
 
 # Setup pnpm
