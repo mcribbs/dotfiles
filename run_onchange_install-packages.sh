@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "Setting up environment!"
 echo "Updating package lists..."
 sudo apt update
 
@@ -59,4 +60,4 @@ else
   echo "cowsay already installed"
 fi
 
-exec "$(command -v zsh)"
+echo "Initial setup complete, don't forget to source ~/.zshrc!"
