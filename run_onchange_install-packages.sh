@@ -46,7 +46,13 @@ else
   echo "zoxide already installed"
 fi
 
-# Install fortune and cowsay if not installed
+# Install fun apps if not installed
+if ! command -v figlet >/dev/null 2>&1; then
+  echo "Installing figlet..."
+  sudo apt install -y figlet
+else
+  echo "figlet already installed"
+fi
 if ! command -v toilet >/dev/null 2>&1; then
   echo "Installing toilet..."
   sudo apt install -y toilet
