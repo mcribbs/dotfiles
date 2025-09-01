@@ -1,5 +1,5 @@
 echo
-#hostname | figlet -w 110 -f big
+hostname | toilet -f ivrit --gay
 fortune -s | cowsay -n
 echo
 uptime
