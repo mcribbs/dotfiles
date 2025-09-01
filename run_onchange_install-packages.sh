@@ -47,6 +47,12 @@ else
 fi
 
 # Install fortune and cowsay if not installed
+if ! command -v toilet >/dev/null 2>&1; then
+  echo "Installing toilet..."
+  sudo apt install -y toilet
+else
+  echo "toilet already installed"
+fi
 if ! command -v fortune >/dev/null 2>&1; then
   echo "Installing fortune..."
   sudo apt install -y fortune
