@@ -88,6 +88,10 @@ bindkey "${terminfo[kcud1]}" history-search-forward
 # Load aliases
 source $HOME/.alias
 
+# Setup nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
 # Setup pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
