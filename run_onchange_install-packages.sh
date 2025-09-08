@@ -22,6 +22,10 @@ else
 fi
 
 # Install Oh My Posh if not installed
+if ! command -v unzip >/dev/null 2>&1; then
+  echo "Installing unzip..."
+  sudo apt install -y unzip
+fi
 if ! command -v oh-my-posh >/dev/null 2>&1; then
   echo "Installing Oh My Posh..."
   curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
