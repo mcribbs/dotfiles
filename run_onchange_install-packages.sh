@@ -34,6 +34,10 @@ else
 fi
 
 # Install fzf if not installed
+if ! command -v git >/dev/null 2>&1; then
+  echo "Installing git..."
+  sudo apt install -y git
+fi
 if [ ! -d "$HOME/.fzf" ]; then
   echo "Installing fzf..."
   git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
