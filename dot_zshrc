@@ -9,13 +9,13 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Install fzf
+# Setup fzf
 if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 source <(fzf --zsh)
 
-# Set PATH, this should probably be done in a .profile or similar
+# Set PATH, should this be done in a .profile or .env or similar
 if [[ ! "$PATH" == *$HOME/.local/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.local/bin"
 fi
@@ -37,8 +37,9 @@ zinit light softmoth/zsh-vim-mode
 zinit snippet OMZP::sudo
 zinit snippet OMZP::dotenv
 zinit snippet OMZP::colored-man-pages
-# These seem to add a shitton of aliases that I'm not sure I can remember
-#zinit snippet OMZP::git
+# These seem to add a shitton of aliases that I'm not sure I can remember 
+# maybe try them one by one and see if they're useful...
+zinit snippet OMZP::git
 #zinit snippet OMZP::aws
 #zinit snippet OMZP::kubectl
 #zinit snippet OMZP::npm
@@ -114,6 +115,13 @@ fi
       #exec tmux -2 new-session -s $me
   #fi
 #fi
+
+# Start zellij if available
+if [[ -f ~/.local/bin/zellij ]]; then
+  ZELLIJ_AUTO_ATTACH=true
+  ZELLIJ_AUTO_EXIT=true
+  eval "$(zellij setup --generate-auto-start zsh)"
+fi
 
 # Uncomment to enable profiling (also line at start of file)
 #zprof
