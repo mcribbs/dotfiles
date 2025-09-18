@@ -104,19 +104,14 @@ case ":$PATH:" in
 esac
 
 # Start zellij if available
-if [[ -f ~/.local/bin/zellij ]]; then
+if ! command -v zellij >/dev/null 2>&1; then
   ZELLIJ_AUTO_ATTACH=true
   ZELLIJ_AUTO_EXIT=true
   eval "$(zellij setup --generate-auto-start zsh)"
 fi
 
-# Print welcome message only for login shells
-#if [[ -o login ]]; then
-#  source $HOME/.welcome
-#fi
-
-# Display fastfetch
-fastfetch
+# Print welcome message
+source $HOME/.welcome
 
 # Uncomment to enable profiling (also line at start of file)
 #zprof
