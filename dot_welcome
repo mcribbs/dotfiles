@@ -1,6 +1,6 @@
 echo
 hostname | toilet -f ivrit --gay
-fortune -s | cowsay -n
+#fortune -s | cowsay -n
 echo
-uptime
-echo
+fastfetch -c all.jsonc -l none
+#uptime
