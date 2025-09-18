@@ -2,8 +2,20 @@
 set -euo pipefail
 
 echo "Setting up environment!"
-echo "Updating package lists..."
+
+echo "Updating apt package lists..."
 sudo apt update
+
+# Install brew if not installed
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Installing brew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  sudo apt-get install build-essential
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+echo "Updating brew package lists..."
+brew update
 
 echo "Install zsh and set default"
 # Install zsh if not installed
@@ -21,7 +33,7 @@ else
   echo "zsh already set as default shell"
 fi
 
-# Install Oh My Posh if not installed
+# Oh My Posh
 if ! command -v unzip >/dev/null 2>&1; then
   echo "Installing unzip..."
   sudo apt install -y unzip
@@ -33,7 +45,7 @@ else
   echo "Oh My Posh already installed"
 fi
 
-# Install fzf if not installed
+# fzf
 if ! command -v git >/dev/null 2>&1; then
   echo "Installing git..."
   sudo apt install -y git
@@ -46,12 +58,20 @@ else
   echo "fzf already installed"
 fi
 
-# Install zoxide if not installed
+# zoxide
 if ! command -v zoxide >/dev/null 2>&1; then
   echo "Installing zoxide..."
   curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 else
   echo "zoxide already installed"
+fi
+
+# zellij
+if ! command -v zellij >/dev/null 2>&1; then
+  echo "Installing zellij..."
+  brew install zellij
+else
+  echo "zellij already installed"
 fi
 
 # Install fun apps if not installed
