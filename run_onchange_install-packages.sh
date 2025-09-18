@@ -61,7 +61,14 @@ fi
 # zellij
 if ! command -v zellij >/dev/null 2>&1; then
   echo "Installing zellij..."
-  
+  if [ "$ARCH" = "x86_64" ]; then
+    curl -sLO https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-x86_64-unknown-linux-musl.tar.gz && tar -xvf ./zellij-x86_64-unknown-linux-musl.tar.gz && rm -f ./zellij-x86_64-unknown-linux-musl.tar.gz
+  elif [ "$ARCH = "aarch64 ] || [ "$ARCH" = "arm64" ]; then
+    curl -sLO https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-aarch64-unknown-linux-musl.tar.gz && tar -xvf ./zellij-aarch64-unknown-linux-musl.tar.gz && rm -f ./zellij-aarch64-unknown-linux-musl.tar.gz
+  else
+    echo "ERROR: unsupported architecture: $ARCH"
+  fi
+  chmod +x ./zellij && mv ./zellij ./.local/bin
 else
   echo "✅ zellij already installed"
 fi
