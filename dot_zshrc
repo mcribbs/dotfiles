@@ -9,9 +9,6 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Setup brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # Setup fzf
 if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
