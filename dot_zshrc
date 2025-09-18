@@ -9,6 +9,9 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
+# Setup brew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # Setup fzf
 if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
@@ -80,9 +83,6 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Setup Oh My Posh prompt if installed
 [[ ! -f ~/.local/bin/oh-my-posh ]] || eval "$(~/.local/bin/oh-my-posh init zsh --config $HOME/.config/ohmyposh/mcribbs.toml)"
-
-# Setup brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Keybindings
 bindkey -v
