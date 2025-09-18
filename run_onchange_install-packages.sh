@@ -61,13 +61,7 @@ fi
 # zellij
 if ! command -v zellij >/dev/null 2>&1; then
   echo "Installing zellij..."
-  if [ "$ARCH" = "x86_64" ]; then
-    curl -sLO https://github.com/fastfetch-cli/fastfetch/releases/download/2.52.0/fastfetch-linux-amd64.deb && sudo apt install ./fastfetch-linux-amd64.deb && rm -f ./fastfetch-linux-amd64.deb
-  elif [ "$ARCH = "aarch64 ] || [ "$ARCH" = "arm64" ]; then
-    curl -sLO https://github.com/fastfetch-cli/fastfetch/releases/download/2.52.0/fastfetch-linux-aarch64.deb && sudo apt install ./fastfetch-linux-aarch64.deb && rm -f ./fastfetch-linux-aarch64.deb
-  else
-    echo "ERROR: unsupported architecture: $ARCH"
-  fi
+  
 else
   echo "✅ zellij already installed"
 fi
@@ -88,6 +82,19 @@ else
 fi
 
 #fastfetch
+if ! command -v fastfetch >/dev/null 2>&1; then
+  echo "Installing fastfetch..."
+  if [ "$ARCH" = "x86_64" ]; then
+    curl -sLO https://github.com/fastfetch-cli/fastfetch/releases/download/2.52.0/fastfetch-linux-amd64.deb && sudo apt install ./fastfetch-linux-amd64.deb && rm -f ./fastfetch-linux-amd64.deb
+  elif [ "$ARCH = "aarch64 ] || [ "$ARCH" = "arm64" ]; then
+    curl -sLO https://github.com/fastfetch-cli/fastfetch/releases/download/2.52.0/fastfetch-linux-aarch64.deb && sudo apt install ./fastfetch-linux-aarch64.deb && rm -f ./fastfetch-linux-aarch64.deb
+  else
+    echo "ERROR: unsupported architecture: $ARCH"
+  fi
+else
+  echo "✅ fastfetch already installed"
+fi
+
 
 echo "-=-=-=-=-=-=-=-=-=-=-=-=--=-"
 echo "Initial setup complete!"
