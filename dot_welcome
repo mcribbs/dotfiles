@@ -2,5 +2,5 @@ echo
 hostname | toilet -f ivrit --gay
 #fortune -s | cowsay -n
 echo
-fastfetch -c all.jsonc -l none
+fastfetch -c config.jsonc -l none
 #uptime
