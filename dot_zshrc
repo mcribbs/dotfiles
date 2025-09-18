@@ -103,17 +103,17 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-# Print welcome message only for login shells
-#if [[ -o login ]]; then
-#  source $HOME/.welcome
-#fi
-
 # Start zellij if available
 if [[ -f ~/.local/bin/zellij ]]; then
   ZELLIJ_AUTO_ATTACH=true
   ZELLIJ_AUTO_EXIT=true
   eval "$(zellij setup --generate-auto-start zsh)"
 fi
+
+# Print welcome message only for login shells
+#if [[ -o login ]]; then
+#  source $HOME/.welcome
+#fi
 
 # Display fastfetch
 fastfetch
