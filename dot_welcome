@@ -1,5 +1,5 @@
 echo
-hostname | toilet -f ivrit --gay
+hostname | toilet -c -w $(tput cols) -f ivrit --gay
 #fortune -s | cowsay -n
 echo
 fastfetch -l none
