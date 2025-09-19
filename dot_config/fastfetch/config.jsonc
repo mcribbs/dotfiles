@@ -132,7 +132,7 @@
             "key": "│{#cyan}└──────────────┴{$1}┘{#keys}│",
             "format": ""
         },
-
+/*
         // Desktop section with green color theme
         {
             "type": "custom",
@@ -162,7 +162,7 @@
             "key": "│{#green}└──────────────┴{$1}┘{#keys}│",
             "format": ""
         },
-
+*/
         // Terminal section with yellow color theme
         {
             "type": "custom",
