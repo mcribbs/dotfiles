@@ -102,7 +102,7 @@ esac
 
 # Start zellij if available and not in an ssh session
 if command -v zellij >/dev/null 2>&1; then
-  if [[ -n $SSH_TTY ]] then;
+  if [[ ! -n $SSH_TTY ]] then;
     ZELLIJ_AUTO_ATTACH=true
     ZELLIJ_AUTO_EXIT=true
     eval "$(zellij setup --generate-auto-start zsh)"
