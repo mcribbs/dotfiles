@@ -1,6 +1,5 @@
 echo
 hostname | toilet -f ivrit --gay
 #fortune -s | cowsay -n
-echo
 fastfetch -l none
 #uptime
