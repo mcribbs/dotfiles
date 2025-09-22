@@ -26,10 +26,6 @@
       "key": "{#red} {icon}  CPU: ",
 	//"format": "{1} ({4}) @ {6}{7} \u001b[s"
     },
-    {
-      "type": "memory",
-      "key": "{#red} {icon}  RAM: "
-    },
     // LINE TWO
 		{
 			"type": "os",
@@ -48,6 +44,7 @@
 			"key": "{#magenta} {icon}  Local IP: ",
 			"format": "{1} ({4}) \u001b[s"
 		},
+		/*
     {
       "type": "users",
       "myselfOnly": true,                               // Only show current user
@@ -55,15 +52,19 @@
       "key": "\u001b[u{#cyan} {icon} Last Login: ",
 			"format": "{5} ({3})"
     },
+    */
     // LINE FOUR
+    /*
 		{
       "type": "datetime",
       "key": "{#blue} {icon}  Uptime: ",
-			"format": "{year}-{month-pretty}-{day-pretty} {hour-pretty}:{minute-pretty}:{second-pretty} {timezone-name} \u001b[s"
+	"format": "{year}-{month-pretty}-{day-pretty} {hour-pretty}:{minute-pretty}:{second-pretty} {timezone-name} \u001b[s"
     },
+    */
 		{
 			"type": "uptime",
-			"key": "\u001b[uup ",
+		//	"key": "\u001b[uup ",
+			"key": "{#blue} {icon}"  Uptime: ",
 			"format": "{?1}{1} days {?}{?2}{2} hours {?}{?3}{3} min{?}\u001b[s"
 		},
 		{
