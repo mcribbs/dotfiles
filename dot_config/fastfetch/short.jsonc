@@ -71,9 +71,10 @@
       "format": "{1}, {2}, {3}\u001b[s"
     },
     {
+      "keyIcon": "",
       "key": "{#cyan} {icon}  Uptime: ",
       "type": "command",
-      "text": "(fastfetch -s uptime --pipe -l none; fastfetch -s loadavg --pipe -l none) | sed 's/Uptime//g; s/Loadavg/- load average /g' | tr '\n' ' '"
+      "text": "(fastfetch -s uptime --pipe -l none; fastfetch -s loadavg --pipe -l none) | sed 's/Uptime//g; s/Loadavg/ load average /g' | tr '\n' ' '"
     }
   ]
 }
