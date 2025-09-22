@@ -63,7 +63,7 @@
       "type": "uptime",
       //"key": "\u001b[uup ",
       "key": "{#cyan} {icon}  Uptime: ",
-      "format": "{?1}{1} days {?}{?2}{2} hours {?}{?3}{3} min{?} {loadavg:1}\u001b[s"
+      "format": "{?1}{1} days {?}{?2}{2} hours {?}{?3}{3} min{?}\u001b[s"
     },
     {
       "type": "loadavg",
@@ -71,7 +71,7 @@
       "format": "{1}, {2}, {3}\u001b[s"
     },
     {
-      "key": " Uptime",
+      "key": "{#cyan} {icon}  Uptime: ",
       "type": "command",
       "text": "(fastfetch -s uptime --pipe -l none; fastfetch -s loadavg --pipe -l none) | sed 's/Uptime//g; s/Loadavg/- load average /g' | tr '\n' ' '"
     }
