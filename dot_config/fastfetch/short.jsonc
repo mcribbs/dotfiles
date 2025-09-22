@@ -10,7 +10,7 @@
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
       "format": "1:{1}, 2:{2}, 3:{3}, 4:{4}, 5:{5}, 6:{6}, 7:{7}, 8:{8}, 9:{9}. 10:{10}"
-    },*/
+    },
 		{
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
@@ -20,15 +20,26 @@
       "type": "memory",
       "key": "\u001b[u{#red} {icon}  RAM: "
     },
+    */
+    {
+      "type": "cpu",
+      "key": "{#red} {icon}  CPU: ",
+	//"format": "{1} ({4}) @ {6}{7} \u001b[s"
+    },
+    {
+      "type": "memory",
+      "key": "{#red} {icon}  RAM: "
+    },
     // LINE TWO
 		{
 			"type": "os",
 			"key": "{#green} {icon}  OS: ",
-			"format": "{2} {8}\u001b[s"
+	//		"format": "{2} {8}\u001b[s"
 		},
 		{
 			"type": "host",
-			"key": "\u001b[u{#yellow} {icon}  Host: ",
+			//"key": "\u001b[u{#yellow} {icon}  Host: ",
+			"key": "{#yellow} {icon}  Host: ",
 			//"format": "{1}"
 		},
 		// LINE THREE
