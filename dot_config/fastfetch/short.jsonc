@@ -14,7 +14,7 @@
 		{
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
-			"format": "{1} ({4}) @ {6} \u001b[s"
+			"format": "{1} ({4}) @ {6}{7} \u001b[s"
     },
 		{
       "type": "memory",
