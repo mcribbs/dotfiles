@@ -73,7 +73,7 @@
     {
       "key": " Uptime",
       "type": "command",
-      "text": "fastfetch -c ~/.config/fastfetch/dt.jsonc -l none | tr '\n' ' '"
+      "text": "(fastfetch -s uptime --pipe -l none; fastfetch -s loadavg --pipe -l none) | sed 's/Uptime//g; s/Loadavg/- load average /g' | tr '\n' ' '"
     }
   ]
 }
