@@ -5,15 +5,16 @@
   },
   "modules": [
 	  // LINE ONE
+	  /*
 		{
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
       "format": "1:{1}, 2:{2}, 3:{3}, 4:{4}, 5:{5}, 6:{6}, 7:{7}, 8:{8}, 9:{9}. 10:{10}"
-    },
+    },*/
 		{
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
-			"format": "{1} ({4}) @ ???GHz \u001b[s"
+			"format": "{1} ({4}) @ {6} \u001b[s"
     },
 		{
       "type": "memory",
