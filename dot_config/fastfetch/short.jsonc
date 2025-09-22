@@ -55,17 +55,12 @@
     */
     // LINE FOUR
     {
-      "key": " Uptime",
-      "type": "command",
-      "text": "fastfetch -c ~/.config/fastfetch/dt.jsonc -l none | tr '\n' ' '"
-    },
-    {
       "type": "datetime",
       "key": "{#blue} {icon}  Date: ",
       "format": "{year}-{month-pretty}-{day-pretty} {hour-pretty}:{minute-pretty}:{second-pretty} {timezone-name} \u001b[s"
     },
     {
-      "type": "uptime:loadavg",
+      "type": "uptime",
       //"key": "\u001b[uup ",
       "key": "{#cyan} {icon}  Uptime: ",
       "format": "{?1}{1} days {?}{?2}{2} hours {?}{?3}{3} min{?} {loadavg:1}\u001b[s"
@@ -74,6 +69,11 @@
       "type": "loadavg",
       "key": " \u001b[u, load average: ",
       "format": "{1}, {2}, {3}\u001b[s"
+    },
+    {
+      "key": " Uptime",
+      "type": "command",
+      "text": "fastfetch -c ~/.config/fastfetch/dt.jsonc -l none | tr '\n' ' '"
     }
   ]
 }
