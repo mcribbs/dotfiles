@@ -1,5 +1,6 @@
 echo
 hostname | toilet -f ivrit --gay
 #fortune -s | cowsay -n
+fortune
 fastfetch -c ~/.config/fastfetch/short.jsonc -l none
 #uptime
