@@ -55,9 +55,9 @@
     */
     // LINE FOUR
     {
-      "key": "Terminal & Font",
+      "key": " Uptime",
       "type": "command",
-      "text": "( fastfetch -s terminal --pipe -l none; fastfetch -s terminalfont --pipe -l none ) | sed 's/Terminal //g; s/Font/-/g' | tr '\n' ' '"
+      "text": "fastfetch -c ~/.config/fastfetch/dt.jsonc -l none | tr '\n' ' '"
     },
     {
       "type": "datetime",
