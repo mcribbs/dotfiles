@@ -63,14 +63,14 @@
     */
     {
       "type": "uptime",
-      "key": "\u001b[uup ",
-      //"key": "{#blue} {icon}"  Uptime: ",
+      //"key": "\u001b[uup ",
+      "key": "{#blue} {icon}  Uptime: ",
       "format": "{?1}{1} days {?}{?2}{2} hours {?}{?3}{3} min{?}\u001b[s"
     },
     {
-			"type": "loadavg",
-			"key": " \u001b[u, load average: ",
-			"format": "{1}, {2}, {3}\u001b[s"
-		}
-	]
+      "type": "loadavg",
+      "key": " \u001b[u, load average: ",
+      "format": "{1}, {2}, {3}\u001b[s"
+    }
+  ]
 }
