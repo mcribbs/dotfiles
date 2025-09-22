@@ -55,6 +55,11 @@
     */
     // LINE FOUR
     {
+      "key": "Terminal & Font",
+      "type": "command",
+      "text": "( fastfetch -s terminal --pipe -l none; fastfetch -s terminalfont --pipe -l none ) | sed 's/Terminal //g; s/Font/-/g' | tr '\n' ' '"
+    },
+    {
       "type": "datetime",
       "key": "{#blue} {icon}  Date: ",
       "format": "{year}-{month-pretty}-{day-pretty} {hour-pretty}:{minute-pretty}:{second-pretty} {timezone-name} \u001b[s"
