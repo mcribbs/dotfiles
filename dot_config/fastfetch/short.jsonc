@@ -23,7 +23,7 @@
 		{
 			"type": "host",
 			"key": "\u001b[u{#yellow} {icon}  Host: ",
-			"format": "{1}"
+			//"format": "{1}"
 		},
 		// LINE THREE
 		{
