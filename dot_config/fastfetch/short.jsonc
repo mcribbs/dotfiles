@@ -54,13 +54,11 @@
     },
     */
     // LINE FOUR
-    /*
     {
       "type": "datetime",
       "key": "{#blue} {icon}  Uptime: ",
       "format": "{year}-{month-pretty}-{day-pretty} {hour-pretty}:{minute-pretty}:{second-pretty} {timezone-name} \u001b[s"
     },
-    */
     {
       "type": "uptime",
       //"key": "\u001b[uup ",
