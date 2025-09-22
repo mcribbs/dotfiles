@@ -4,15 +4,17 @@
     "separator": ""
   },
   "modules": [
+	  // LINE ONE
 		{
       "type": "cpu",
       "key": "{#red} {icon}  CPU: ",
-			"format": "{1} ({4}) @ {3}GHz \u001b[s"
+			"format": "{1} ({4}) @ {3} {2} {5}GHz \u001b[s"
     },
 		{
       "type": "memory",
       "key": "\u001b[u{#red} {icon}  RAM: "
     },
+    // LINE TWO
 		{
 			"type": "os",
 			"key": "{#green} {icon}  OS: ",
@@ -23,6 +25,7 @@
 			"key": "\u001b[u{#yellow} {icon}  Host: ",
 			"format": "{1}"
 		},
+		// LINE THREE
 		{
 			"type": "localip",
 			"key": "{#magenta} {icon}  Local IP: ",
@@ -35,6 +38,7 @@
       "key": "\u001b[u{#cyan} {icon} Last Login: ",
 			"format": "{5} ({3})"
     },
+    // LINE FOUR
 		{
       "type": "datetime",
       "key": "{#blue} {icon}  Uptime: ",
