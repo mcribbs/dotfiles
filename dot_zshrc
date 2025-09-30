@@ -100,6 +100,11 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# Setup Android dev paths
+ANDROID_HOME="/home/mcribbs/Android/sdk"
+PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
 # Enable shell integration if in VSCode
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
