@@ -100,6 +100,9 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# Enable shell integration if in VSCode
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
 # Start zellij if available and not in an ssh session
 if command -v zellij >/dev/null 2>&1; then
   if [[ ! -n $SSH_TTY ]] then;
