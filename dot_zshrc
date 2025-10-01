@@ -108,9 +108,9 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # Enable shell integration if in VSCode
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
-# Start zellij if available and not in an ssh session
+# Start zellij if available and not in an ssh session or vscode
 if command -v zellij >/dev/null 2>&1; then
-  if [[ ! -n $SSH_TTY ]] then;
+  if [[ ! -n $SSH_TTY ]] && [[ "$TERM_PROGRAM" != "vscode" ]]then;
     ZELLIJ_AUTO_ATTACH=true
     ZELLIJ_AUTO_EXIT=true
     eval "$(zellij setup --generate-auto-start zsh)"
