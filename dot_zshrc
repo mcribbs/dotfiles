@@ -110,7 +110,7 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
 # Start zellij if available and not in an ssh session or vscode
 if command -v zellij >/dev/null 2>&1; then
-  if [[ ! -n $SSH_TTY ]] && [[ "$TERM_PROGRAM" != "vscode" ]]then;
+  if [[ ! -n $SSH_TTY ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
     ZELLIJ_AUTO_ATTACH=true
     ZELLIJ_AUTO_EXIT=true
     eval "$(zellij setup --generate-auto-start zsh)"
