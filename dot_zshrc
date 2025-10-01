@@ -109,6 +109,7 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
 # Start zellij if available and not in an ssh session or vscode
+echo $TERM_PROGRAM
 if command -v zellij >/dev/null 2>&1; then
   if [[ ! -n $SSH_TTY ]]; then
     if [[ "$TERM_PROGRAM" != "vscode" ]]; then
