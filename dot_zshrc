@@ -102,6 +102,7 @@ esac
 
 # Setup Android dev paths
 ANDROID_HOME="/home/mcribbs/Android/sdk"
+ANDROID_SDK_ROOT="$ANDROID_HOME"
 PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
 JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
