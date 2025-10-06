@@ -121,6 +121,9 @@ if command -v zellij >/dev/null 2>&1; then
   fi
 fi
 
+# Set to force WSL into dark mode
+GTK_THEME=Adwaita:dark
+
 # Print welcome message
 source $HOME/.welcome
 
