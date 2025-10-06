@@ -39,6 +39,8 @@ alias npm='pnpm'
 # force 256 color mode for tmux sessions
 alias tmux='tmux -2'
 
+alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOzonePlatform'
+
 #detach instead of exit session if in tmux
 #if [ -n "$SSH_TTY" ]; then
   #alias exit='tmux detach'
