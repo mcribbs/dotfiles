@@ -115,7 +115,7 @@ fi
 if command -v zellij >/dev/null 2>&1 \
    && [[ -z "$SSH_TTY" ]] \
    && [[ -n "$WSLENV" && "$WSLENV" != *"ELECTRON"* ]]; then
-  ZELLIJ_AUTO_ATTACH=true
+  #ZELLIJ_AUTO_ATTACH=true
   ZELLIJ_AUTO_EXIT=true
   eval "$(zellij setup --generate-auto-start zsh)"
 fi
