@@ -107,18 +107,17 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 PATH="$JAVA_HOME/bin:$PATH"
 
 # Enable shell integration if in VSCode
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+if [ -z "$WSLENV" ] || [[ "$WSLENV" == *"ELECTRON"* ]]; then
+    . "$(code --locate-shell-integration-path zsh)"
+fi
 
 # Start zellij if available and not in an ssh session or vscode
-echo $TERM_PROGRAM
-if command -v zellij >/dev/null 2>&1; then
-  if [[ ! -n $SSH_TTY ]]; then
-    if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-      ZELLIJ_AUTO_ATTACH=true
-      ZELLIJ_AUTO_EXIT=true
-      eval "$(zellij setup --generate-auto-start zsh)"
-    fi
-  fi
+if command -v zellij >/dev/null 2>&1 \
+   && [[ -z "$SSH_TTY" ]] \
+   && { [ -z "$WSLENV" ] || [[ "$WSLENV" != *"ELECTRON"* ]]; }; then
+  ZELLIJ_AUTO_ATTACH=true
+  ZELLIJ_AUTO_EXIT=true
+  eval "$(zellij setup --generate-auto-start zsh)"
 fi
 
 # Set to force WSL into dark mode
