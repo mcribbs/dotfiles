@@ -114,7 +114,8 @@ fi
 # Start zellij if available and not in an ssh session or vscode
 if command -v zellij >/dev/null 2>&1 \
    && [[ -z "$SSH_TTY" ]] \
-   && [[ -n "$WSLENV" && "$WSLENV" != *"ELECTRON"* ]]; then
+   && [[ -n "$WSLENV" && "$WSLENV" != *"ELECTRON"* ]] \
+   && [[ "$TERM_PROGRAM != "vscode" ]]; then
   #ZELLIJ_AUTO_ATTACH=true
   ZELLIJ_AUTO_EXIT=true
   eval "$(zellij setup --generate-auto-start zsh)"
