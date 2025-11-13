@@ -143,8 +143,16 @@ else
   fi
 fi
 
-ensure_tool figlet
 ensure_tool toilet
+font_dir="$HOME/.config/figlet"
+font_path="$font_dir/Ivrit.flf"
+if [ -f "$font_path" ]; then
+  echo "✅ Ivrit figlet font already downloaded"
+else
+  echo "Downloading Ivrit figlet font..."
+  mkdir -p "$font_dir"
+  curl -fsSL "https://raw.githubusercontent.com/xero/figlet-fonts/refs/heads/master/Ivrit.flf" -o "$font_path"
+fi
 
 if command -v fastfetch >/dev/null 2>&1; then
   echo "✅ fastfetch already installed"

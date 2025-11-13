@@ -1,5 +1,5 @@
 echo
-hostname | toilet -f ivrit --gay
+hostname | toilet -d ~/.config/figlet -f Ivrit --gay
 #fortune -s | cowsay -n
 fastfetch -c ~/.config/fastfetch/short.jsonc -l none
 echo
