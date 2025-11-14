@@ -106,10 +106,20 @@ PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
 JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 PATH="$JAVA_HOME/bin:$PATH"
 
-# Enable shell integration if in VSCode
 if [[ "$TERM_PROGRAM" == "vscode" ]] || [[ "$WSLENV" == *"ELECTRON"* ]]; then
-  echo "Loading VS Code shell integration"
-  . "$(code --locate-shell-integration-path zsh)"
+  # Enable shell integration if in VSCode (only if `code` supports the flag)
+  if command -v code >/dev/null 2>&1; then
+    if code --locate-shell-integration-path zsh >/dev/null 2>&1; then
+      _vscode_shell="$(code --locate-shell-integration-path zsh 2>/dev/null)"
+      if [[ -n "$_vscode_shell" && -f "$_vscode_shell" ]]; then
+        echo "Loading VS Code shell integration"
+        . "$_vscode_shell"
+      fi
+    else
+      # code CLI doesn't support --locate-shell-integration-path on this install — skip
+      :
+    fi
+  fi
 fi
 
 # Start zellij if available and not in an ssh session or vscode
