@@ -178,6 +178,8 @@ else
   fi
 fi
 
+ensure_tool fortune
+
 
 echo "-=-=-=-=-=-=-=-=-=-=-=-=--=-"
 echo "Initial setup complete!"
