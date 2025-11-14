@@ -107,8 +107,9 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 PATH="$JAVA_HOME/bin:$PATH"
 
 # Enable shell integration if in VSCode
-if [ -z "$WSLENV" ] || [[ "$WSLENV" == *"ELECTRON"* ]]; then
-    . "$(code --locate-shell-integration-path zsh)"
+if [[ "$TERM_PROGRAM" == "vscode" ]] || [[ "$WSLENV" == *"ELECTRON"* ]]; then
+  echo "Loading VS Code shell integration"
+  . "$(code --locate-shell-integration-path zsh)"
 fi
 
 # Start zellij if available and not in an ssh session or vscode
