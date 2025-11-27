@@ -151,7 +151,7 @@ if [ -f "$font_path" ]; then
 else
   echo "Downloading Ivrit figlet font..."
   mkdir -p "$font_dir"
-  curl -fsSL "https://raw.githubusercontent.com/xero/figlet-fonts/refs/heads/master/Ivrit.flf" -o "$font_path"
+  curl -fsSL "https://raw.githubusercontent.com/xero/figlet-fonts/main/Ivrit.flf" -o "$font_path"
 fi
 
 if command -v fastfetch >/dev/null 2>&1; then
