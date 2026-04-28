@@ -18,6 +18,9 @@ source <(fzf --zsh)
 if [[ ! "$PATH" == *$HOME/.local/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.local/bin"
 fi
+if [[ ! "$PATH" == */usr/games* ]]; then
+  PATH="${PATH:+${PATH}:}/usr/games"
+fi
 
 # Load completions, only rebuild if the zcompdump file is older then 24 hours
 autoload -Uz compinit
