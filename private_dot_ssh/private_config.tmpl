@@ -13,7 +13,7 @@ Host rose martha clara donna dalek
   User mcribbs
 {{- if (get . "onepassword_ssh_agent") }}
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
-  IdentityFile ~/.ssh/home-personal.pub
+  IdentityFile ~/.ssh/home-admin.pub
   IdentitiesOnly yes
 {{- else }}
   IdentitiesOnly no
