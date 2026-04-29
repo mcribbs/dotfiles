@@ -4,4 +4,4 @@ hostname | toilet -d ~/.config/figlet -f Ivrit --gay
 fastfetch -c ~/.config/fastfetch/short.jsonc -l none
 echo
 fortune
-#uptime
+echo
