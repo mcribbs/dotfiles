@@ -1,9 +1,6 @@
 # Uncomment to enable profiling (also line at end of file)
 #zmodload zsh/zprof
 
-# Check for dotfile updates
-chezmoi update
-
 # Setup zinit, downloading if needed
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [ ! -d "$ZINIT_HOME" ]; then
@@ -25,6 +22,9 @@ fi
 if [[ ! "$PATH" == */usr/games* ]]; then
   PATH="${PATH:+${PATH}:}/usr/games"
 fi
+
+# Check for dotfile updates
+chezmoi update
 
 # Load completions, only rebuild if the zcompdump file is older then 24 hours
 autoload -Uz compinit
