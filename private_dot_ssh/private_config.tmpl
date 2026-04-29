@@ -4,8 +4,10 @@ Host github.com
 {{- if (get . "onepassword_ssh_agent") }}
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
   IdentityFile ~/.ssh/github-dotfiles.pub
-{{- end }}
   IdentitiesOnly yes
+{{- else }}
+  IdentitiesOnly no
+{{- end }}
 
 Host rose martha clara donna dalek
   User mcribbs
