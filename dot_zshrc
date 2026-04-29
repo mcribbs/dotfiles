@@ -1,5 +1,9 @@
 # Uncomment to enable profiling (also line at end of file)
 #zmodload zsh/zprof
+
+# Check for dotfile updates
+chezmoi update
+
 # Setup zinit, downloading if needed
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [ ! -d "$ZINIT_HOME" ]; then
