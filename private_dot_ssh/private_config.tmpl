@@ -12,6 +12,8 @@ Host rose martha clara donna dalek
 {{- if (get . "onepassword_ssh_agent") }}
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
   IdentityFile ~/.ssh/home-personal.pub
-{{- end }}
   IdentitiesOnly yes
+{{- else }}
+  IdentitiesOnly no
+{{- end }}
   ForwardAgent yes
