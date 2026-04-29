@@ -7,11 +7,11 @@ Host github.com
 {{- end }}
   IdentitiesOnly yes
 
-Host dalek
-  HostName dalek
+Host rose martha clara donna dalek
   User mcribbs
 {{- if (get . "onepassword_ssh_agent") }}
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
+  IdentityFile ~/.ssh/home-personal.pub
 {{- end }}
+  IdentitiesOnly yes
   ForwardAgent yes
-
