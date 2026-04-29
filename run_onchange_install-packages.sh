@@ -184,4 +184,8 @@ ensure_tool fortune
 echo "-=-=-=-=-=-=-=-=-=-=-=-=--=-"
 echo "Initial setup complete!"
 echo "Don't forget to source ~/.zshrc"
+echo "If 1password is installed update ~/.config/chezmoi/local.toml"
+echo "[data]"
+echo "onepassword_ssh_agent = true"
+echo "onepassword_ssh_agent_socket = <from 1password developer mode>"
 echo "-=-=-=-=-=-=-=-=-=-=-=-=--=-"

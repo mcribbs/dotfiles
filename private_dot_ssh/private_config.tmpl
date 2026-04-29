@@ -1,8 +1,8 @@
 Host github.com
   HostName github.com
   User git
-{{- if .onepassword_ssh_agent }}
-  IdentityAgent "{{ .onepassword_ssh_agent_socket }}"
+{{- if (get . "onepassword_ssh_agent") }}
+  IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
   IdentityFile ~/.ssh/github-dotfiles.pub
 {{- end }}
   IdentitiesOnly yes
@@ -10,8 +10,8 @@ Host github.com
 Host dalek
   HostName dalek
   User mcribbs
-{{- if .onepassword_ssh_agent }}
-  IdentityAgent "{{ .onepassword_ssh_agent_socket }}"
+{{- if (get . "onepassword_ssh_agent") }}
+  IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
 {{- end }}
   ForwardAgent yes
 

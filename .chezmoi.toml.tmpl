@@ -1,0 +1,7 @@
+[git]
+autoCommit = true
+autoPush = true
+
+{{- if stat (joinPath .chezmoi.homeDir ".config/chezmoi/local.toml") }}
+{{ include (joinPath .chezmoi.homeDir ".config/chezmoi/local.toml") }}
+{{- end }}
