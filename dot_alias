@@ -42,26 +42,40 @@ alias tmux='tmux -2'
 
 alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOzonePlatform'
 
-# setup functions to wrap windows ssh for 1password integration
+# setup functions to wrap Windows ssh for 1Password integration
 if grep -qi microsoft /proc/version; then
+  _wsl_win_path() {
+    wslpath -w "$1" | sed 's#\\#/#g'
+  }
+
+  _wsl_ssh_config() {
+    _wsl_win_path "$HOME/.ssh/config"
+  }
+
+  _wsl_known_hosts() {
+    mkdir -p "$HOME/.ssh"
+    touch "$HOME/.ssh/known_hosts"
+    _wsl_win_path "$HOME/.ssh/known_hosts"
+  }
+
   ssh() {
     ssh.exe \
-      -F "$(wslpath -w "$HOME/.ssh/config")" \
-      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      -F "$(_wsl_ssh_config)" \
+      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
   scp() {
     scp.exe \
-      -F "$(wslpath -w "$HOME/.ssh/config")" \
-      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      -F "$(_wsl_ssh_config)" \
+      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
   sftp() {
     sftp.exe \
-      -F "$(wslpath -w "$HOME/.ssh/config")" \
-      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      -F "$(_wsl_ssh_config)" \
+      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
@@ -69,7 +83,7 @@ if grep -qi microsoft /proc/version; then
     ssh-add.exe "$@"
   }
 
-  export GIT_SSH_COMMAND="ssh.exe -F $(wslpath -w "$HOME/.ssh/config") -o UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")"
+  export GIT_SSH_COMMAND="ssh.exe -F \"$(_wsl_ssh_config)\" -o UserKnownHostsFile=\"$(_wsl_known_hosts)\""
 fi
 
 #detach instead of exit session if in tmux
