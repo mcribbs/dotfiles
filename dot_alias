@@ -42,6 +42,36 @@ alias tmux='tmux -2'
 
 alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOzonePlatform'
 
+# setup functions to wrap windows ssh for 1password integration
+if grep -qi microsoft /proc/version; then
+  ssh() {
+    ssh.exe \
+      -F "$(wslpath -w "$HOME/.ssh/config")" \
+      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      "$@"
+  }
+
+  scp() {
+    scp.exe \
+      -F "$(wslpath -w "$HOME/.ssh/config")" \
+      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      "$@"
+  }
+
+  sftp() {
+    sftp.exe \
+      -F "$(wslpath -w "$HOME/.ssh/config")" \
+      -o "UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")" \
+      "$@"
+  }
+
+  ssh-add() {
+    ssh-add.exe "$@"
+  }
+
+  export GIT_SSH_COMMAND="ssh.exe -F $(wslpath -w "$HOME/.ssh/config") -o UserKnownHostsFile=$(wslpath -w "$HOME/.ssh/known_hosts")"
+fi
+
 #detach instead of exit session if in tmux
 #if [ -n "$SSH_TTY" ]; then
   #alias exit='tmux detach'
