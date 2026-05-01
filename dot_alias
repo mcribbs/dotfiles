@@ -44,6 +44,11 @@ alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOz
 
 # setup functions to wrap Windows ssh for 1Password integration
 if grep -qi microsoft /proc/version; then
+  unalias ssh 2>/dev/null
+  unalias scp 2>/dev/null
+  unalias sftp 2>/dev/null
+  unalias ssh-add 2>/dev/null
+
   _wsl_win_path() {
     wslpath -w "$1" | sed 's#\\#/#g'
   }
@@ -58,28 +63,28 @@ if grep -qi microsoft /proc/version; then
     _wsl_win_path "$HOME/.ssh/known_hosts"
   }
 
-  ssh() {
+  function ssh() {
     ssh.exe \
       -F "$(_wsl_ssh_config)" \
       -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
-  scp() {
+  function scp() {
     scp.exe \
       -F "$(_wsl_ssh_config)" \
       -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
-  sftp() {
+  function sftp() {
     sftp.exe \
       -F "$(_wsl_ssh_config)" \
       -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
       "$@"
   }
 
-  ssh-add() {
+  function ssh-add() {
     ssh-add.exe "$@"
   }
 
