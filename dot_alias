@@ -88,7 +88,7 @@ if grep -qi microsoft /proc/version; then
     ssh-add.exe "$@"
   }
 
-  export GIT_SSH_COMMAND="ssh.exe -F \"$(_wsl_ssh_config)\" -o UserKnownHostsFile=\"$(_wsl_known_hosts)\""
+  export GIT_SSH_COMMAND='ssh.exe -F //wsl.localhost/Ubuntu/home/mcribbs/.ssh/config -o UserKnownHostsFile=//wsl.localhost/Ubuntu/home/mcribbs/.ssh/known_hosts'
 fi
 
 #detach instead of exit session if in tmux
