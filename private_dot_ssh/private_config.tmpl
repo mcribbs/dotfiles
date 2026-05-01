@@ -1,21 +1,51 @@
+{{- $isWSL := contains "microsoft" (lower (output "uname" "-r")) -}}
+
+#
+# GitHub
+#
 Host github.com
   HostName github.com
   User git
-{{- if (get . "onepassword_ssh_agent") }}
+
+{{- if $isWSL }}
+  # Windows OpenSSH + 1Password
+  IdentityFile "C:/Users/Matt Cribbs/.ssh/github-dotfiles.pub"
+  IdentitiesOnly yes
+
+{{- else if (get . "onepassword_ssh_agent") }}
+  # Native macOS/Linux 1Password agent
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
   IdentityFile ~/.ssh/github-dotfiles.pub
   IdentitiesOnly yes
+
 {{- else }}
+  # Forwarded agent / normal ssh-agent
   IdentitiesOnly no
+
 {{- end }}
 
+
+#
+# Homelab hosts
+#
 Host rose martha clara donna dalek
   User mcribbs
-{{- if (get . "onepassword_ssh_agent") }}
+
+{{- if $isWSL }}
+  # Windows OpenSSH + 1Password
+  IdentityFile "C:/Users/Matt Cribbs/.ssh/home-admin.pub"
+  IdentitiesOnly yes
+
+{{- else if (get . "onepassword_ssh_agent") }}
+  # Native macOS/Linux 1Password agent
   IdentityAgent "{{ get . "onepassword_ssh_agent_socket" }}"
   IdentityFile ~/.ssh/home-admin.pub
   IdentitiesOnly yes
+
 {{- else }}
+  # Forwarded agent / normal ssh-agent
   IdentitiesOnly no
+
 {{- end }}
+
   ForwardAgent yes

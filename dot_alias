@@ -44,51 +44,23 @@ alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOz
 
 # setup functions to wrap Windows ssh for 1Password integration
 if grep -qi microsoft /proc/version; then
-  unalias ssh 2>/dev/null
-  unalias scp 2>/dev/null
-  unalias sftp 2>/dev/null
-  unalias ssh-add 2>/dev/null
-
-  _wsl_win_path() {
-    wslpath -w "$1" | sed 's#\\#/#g'
+  function ssh {
+    ssh.exe "$@"
   }
 
-  _wsl_ssh_config() {
-    _wsl_win_path "$HOME/.ssh/config"
+  function scp {
+    scp.exe "$@"
   }
 
-  _wsl_known_hosts() {
-    mkdir -p "$HOME/.ssh"
-    touch "$HOME/.ssh/known_hosts"
-    _wsl_win_path "$HOME/.ssh/known_hosts"
+  function sftp {
+    sftp.exe "$@"
   }
 
-  function ssh() {
-    ssh.exe \
-      -F "$(_wsl_ssh_config)" \
-      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
-      "$@"
-  }
-
-  function scp() {
-    scp.exe \
-      -F "$(_wsl_ssh_config)" \
-      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
-      "$@"
-  }
-
-  function sftp() {
-    sftp.exe \
-      -F "$(_wsl_ssh_config)" \
-      -o "UserKnownHostsFile=$(_wsl_known_hosts)" \
-      "$@"
-  }
-
-  function ssh-add() {
+  function ssh-add {
     ssh-add.exe "$@"
   }
 
-  export GIT_SSH_COMMAND='ssh.exe -F //wsl.localhost/Ubuntu/home/mcribbs/.ssh/config -o UserKnownHostsFile=//wsl.localhost/Ubuntu/home/mcribbs/.ssh/known_hosts'
+  unset GIT_SSH_COMMAND
 fi
 
 #detach instead of exit session if in tmux
