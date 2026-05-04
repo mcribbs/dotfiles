@@ -4,6 +4,13 @@
 # Helpers / environment
 # -----------------------------
 
+# Minimal PATH needed for early startup logic
+path=(
+  "$HOME/.local/bin"
+  $path
+)
+typeset -U path PATH
+
 export ZSHRC_SESSION_BOOTSTRAPPED="${ZSHRC_SESSION_BOOTSTRAPPED:-}"
 
 _is_vscode() {
@@ -35,7 +42,6 @@ fi
 # -----------------------------
 
 path=(
-  "$HOME/.local/bin"
   "$HOME/.fzf/bin"
   /usr/games
   $path
