@@ -16,9 +16,6 @@ _should_start_zellij() {
   [[ -z "$SSH_TTY" ]] || return 1
   _is_vscode && return 1
 
-  # Your current WSL condition
-  [[ -n "$WSLENV" ]] || return 1
-
   return 0
 }
 
