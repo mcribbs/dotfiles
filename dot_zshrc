@@ -1,62 +1,138 @@
-# Uncomment to enable profiling (also line at end of file)
-#zmodload zsh/zprof
+# ~/.zshrc
 
-# Setup zinit, downloading if needed
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-if [ ! -d "$ZINIT_HOME" ]; then
-	mkdir -p "$(dirname $ZINIT_HOME)"
-	git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+# -----------------------------
+# Helpers / environment
+# -----------------------------
+
+export ZSHRC_SESSION_BOOTSTRAPPED="${ZSHRC_SESSION_BOOTSTRAPPED:-}"
+
+_is_vscode() {
+  [[ "$TERM_PROGRAM" == "vscode" ]] || [[ "$WSLENV" == *"ELECTRON"* ]]
+}
+
+_should_start_zellij() {
+  command -v zellij >/dev/null 2>&1 || return 1
+  [[ -z "$ZELLIJ" ]] || return 1
+  [[ -z "$SSH_TTY" ]] || return 1
+  _is_vscode && return 1
+
+  # Your current WSL condition
+  [[ -n "$WSLENV" ]] || return 1
+
+  return 0
+}
+
+# -----------------------------
+# Auto-start zellij EARLY
+# -----------------------------
+# This prevents chezmoi/welcome/etc. from running in the outer shell,
+# then again in the shell spawned inside zellij.
+
+if _should_start_zellij; then
+  export ZELLIJ_AUTO_EXIT=true
+  exec zellij
 fi
+
+# -----------------------------
+# PATH
+# -----------------------------
+
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.fzf/bin"
+  /usr/games
+  $path
+)
+
+typeset -U path PATH
+
+export PNPM_HOME="$HOME/.local/share/pnpm"
+path=("$PNPM_HOME" $path)
+
+export ANDROID_HOME="$HOME/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+path=(
+  "$JAVA_HOME/bin"
+  "$ANDROID_HOME/cmdline-tools/latest/bin"
+  "$ANDROID_HOME/platform-tools"
+  $path
+)
+
+typeset -U path PATH
+
+export GTK_THEME=Adwaita:dark
+
+# -----------------------------
+# One-time per terminal/session stuff
+# -----------------------------
+
+if [[ -z "$ZSHRC_SESSION_BOOTSTRAPPED" ]]; then
+  export ZSHRC_SESSION_BOOTSTRAPPED=1
+
+  # Check for dotfile updates once
+  if command -v chezmoi >/dev/null 2>&1; then
+    chezmoi update
+  fi
+
+  # Welcome once
+  [[ -f "$HOME/.welcome" ]] && source "$HOME/.welcome"
+fi
+
+# -----------------------------
+# zinit
+# -----------------------------
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Setup fzf
-if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
-fi
-source <(fzf --zsh)
+# -----------------------------
+# fzf
+# -----------------------------
 
-# Set PATH, should this be done in a .profile or .env or similar
-if [[ ! "$PATH" == *$HOME/.local/bin* ]]; then
-  PATH="${PATH:+${PATH}:}$HOME/.local/bin"
-fi
-if [[ ! "$PATH" == */usr/games* ]]; then
-  PATH="${PATH:+${PATH}:}/usr/games"
-fi
+command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
 
-# Check for dotfile updates
-chezmoi update
+# -----------------------------
+# completions
+# -----------------------------
 
-# Load completions, only rebuild if the zcompdump file is older then 24 hours
 autoload -Uz compinit
-[ ! "$(find ~/.zcompdump -mtime 1)" ] || compinit
-compinit -C
+
+if [[ ! -f ~/.zcompdump || ~/.zcompdump -ot ~/.zshrc ]]; then
+  compinit
+else
+  compinit -C
+fi
+
 zinit cdreplay -q
 
-# Must load AFTER compinit but before autosuggest and syntax-highlighting
-zinit light Aloxaf/fzf-tab 
-
-# Load other plugins
+zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light softmoth/zsh-vim-mode
+
 zinit snippet OMZP::sudo
 zinit snippet OMZP::dotenv
 zinit snippet OMZP::colored-man-pages
-# These seem to add a shitton of aliases that I'm not sure I can remember 
-# maybe try them one by one and see if they're useful...
 zinit snippet OMZP::git
-#zinit snippet OMZP::aws
-#zinit snippet OMZP::kubectl
-#zinit snippet OMZP::npm
-#zinit snippet OMZP::tmux
-#zinit snippet OMZP::docker
 
-# Configure history
+# -----------------------------
+# history
+# -----------------------------
+
 HISTSIZE=5001
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUPE=erase
+
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
@@ -65,8 +141,11 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
-# Configure vi mode
-VIM_MODE_TRACK_KEYMAP=no # Disable all tracking of editing keymap, cursor styling, prompt indicators,
+# -----------------------------
+# vi mode
+# -----------------------------
+
+VIM_MODE_TRACK_KEYMAP=no
 MODE_CURSOR_VIINS="#00ff00 blinking bar"
 MODE_CURSOR_REPLACE="$MODE_CURSOR_VIINS #ff0000"
 MODE_CURSOR_VICMD="green block"
@@ -74,78 +153,38 @@ MODE_CURSOR_SEARCH="#ff00ff steady underline"
 MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
 MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
-# Setup zoxide
-eval "$(zoxide init --cmd cd zsh)"
+bindkey -v
+bindkey "${terminfo[kcuu1]}" history-search-backward
+bindkey "${terminfo[kcud1]}" history-search-forward
 
-# Completion stylings
+# -----------------------------
+# tools
+# -----------------------------
+
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init --cmd cd zsh)"
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Setup Oh My Posh prompt if installed
 if command -v oh-my-posh >/dev/null 2>&1; then
-  eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/mcribbs.toml)"
+  eval "$(oh-my-posh init zsh --config "$HOME/.config/ohmyposh/mcribbs.toml")"
 fi
 
-# Keybindings
-bindkey -v
-bindkey "${terminfo[kcuu1]}" history-search-backward
-bindkey "${terminfo[kcud1]}" history-search-forward
+[[ -f "$HOME/.alias" ]] && source "$HOME/.alias"
 
-# Load aliases
-source $HOME/.alias
-
-# Setup nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 
-# Setup pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+# -----------------------------
+# VS Code shell integration
+# -----------------------------
 
-# Setup Android dev paths
-ANDROID_HOME="/home/mcribbs/Android/sdk"
-ANDROID_SDK_ROOT="$ANDROID_HOME"
-PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-PATH="$JAVA_HOME/bin:$PATH"
-
-if [[ "$TERM_PROGRAM" == "vscode" ]] || [[ "$WSLENV" == *"ELECTRON"* ]]; then
-  # Enable shell integration if in VSCode (only if `code` supports the flag)
-  if command -v code >/dev/null 2>&1; then
-    if code --locate-shell-integration-path zsh >/dev/null 2>&1; then
-      _vscode_shell="$(code --locate-shell-integration-path zsh 2>/dev/null)"
-      if [[ -n "$_vscode_shell" && -f "$_vscode_shell" ]]; then
-        echo "Loading VS Code shell integration"
-        . "$_vscode_shell"
-      fi
-    else
-      # code CLI doesn't support --locate-shell-integration-path on this install — skip
-      :
-    fi
+if _is_vscode && command -v code >/dev/null 2>&1; then
+  _vscode_shell="$(code --locate-shell-integration-path zsh 2>/dev/null)"
+  if [[ -n "$_vscode_shell" && -f "$_vscode_shell" ]]; then
+    source "$_vscode_shell"
   fi
 fi
-
-# Start zellij if available and not in an ssh session or vscode
-if command -v zellij >/dev/null 2>&1 \
-   && [[ -z "$SSH_TTY" ]] \
-   && [[ -n "$WSLENV" && "$WSLENV" != *"ELECTRON"* ]] \
-   && [[ "$TERM_PROGRAM" != "vscode" ]]; then
-  #ZELLIJ_AUTO_ATTACH=true
-  ZELLIJ_AUTO_EXIT=true
-  eval "$(zellij setup --generate-auto-start zsh)"
-fi
-
-# Set to force WSL into dark mode
-GTK_THEME=Adwaita:dark
-
-# Print welcome message
-source $HOME/.welcome
-
-# Uncomment to enable profiling (also line at start of file)
-#zprof
