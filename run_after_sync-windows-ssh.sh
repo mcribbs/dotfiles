@@ -2,9 +2,11 @@
 set -euo pipefail
 
 # Only run inside WSL
-if ! grep -qi microsoft /proc/version; then
+if [[ -z "${WSL_DISTRO_NAME:-}" ]]; then
   exit 0
 fi
+
+echo "Synching ssh files"
 
 WIN_USERPROFILE="$(powershell.exe -NoProfile -Command '[Environment]::GetFolderPath("UserProfile")' | tr -d '\r')"
 WIN_SSH_DIR="$(wslpath -u "$WIN_USERPROFILE")/.ssh"
