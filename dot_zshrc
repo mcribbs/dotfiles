@@ -181,6 +181,8 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 
+[[ -f "$HOME/.acme.sh" ]] && . "/home/mcribbs/.acme.sh/acme.sh.env"
+
 # -----------------------------
 # VS Code shell integration
 # -----------------------------
