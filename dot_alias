@@ -43,23 +43,11 @@ alias tmux='tmux -2'
 alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOzonePlatform'
 
 # setup functions to wrap Windows ssh for 1Password integration
-if grep -qi microsoft /proc/version; then
-  function ssh {
-    ssh.exe "$@"
-  }
-
-  function scp {
-    scp.exe "$@"
-  }
-
-  function sftp {
-    sftp.exe "$@"
-  }
-
-  function ssh-add {
-    ssh-add.exe "$@"
-  }
-
+if [[ -n "${WSL_DISTRO_NAME:-}" ]]; then
+  function ssh { ssh.exe "$@"; }
+  function scp { scp.exe "$@"; }
+  function sftp { sftp.exe "$@"; }
+  function ssh-add { ssh-add.exe "$@"; }
   unset GIT_SSH_COMMAND
 fi
 
