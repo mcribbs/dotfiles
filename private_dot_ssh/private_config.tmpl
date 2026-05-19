@@ -1,4 +1,9 @@
 {{- $isWSL := contains "microsoft" (lower (output "uname" "-r")) -}}
+{{- $winHome := "" -}}
+
+{{- if $isWSL -}}
+{{- $winHome = (output "powershell.exe" "-NoProfile" "-Command" "[Environment]::GetFolderPath('UserProfile')" | trim | replace "\\" "/") -}}
+{{- end -}}
 
 #
 # GitHub
@@ -9,7 +14,7 @@ Host github.com
 
 {{- if $isWSL }}
   # Windows OpenSSH + 1Password
-  IdentityFile "C:/Users/Matt Cribbs/.ssh/github-dotfiles.pub"
+  IdentityFile "{{ $winHome }}/.ssh/github-dotfiles.pub"
   IdentitiesOnly yes
 
 {{- else if (get . "onepassword_ssh_agent") }}
@@ -33,7 +38,7 @@ Host rose martha clara donna dalek
 
 {{- if $isWSL }}
   # Windows OpenSSH + 1Password
-  IdentityFile "C:/Users/Matt Cribbs/.ssh/home-admin.pub"
+  IdentityFile "{{ $winHome }}/.ssh/home-admin.pub"
   IdentitiesOnly yes
 
 {{- else if (get . "onepassword_ssh_agent") }}
