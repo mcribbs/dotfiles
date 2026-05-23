@@ -17,6 +17,10 @@ _is_vscode() {
   [[ "$TERM_PROGRAM" == "vscode" ]] || [[ "$WSLENV" == *"ELECTRON"* ]]
 }
 
+_is_copilot_agent_terminal() {
+  [[ "${COPILOT_AGENT:-0}" == "1" ]]
+}
+
 _should_start_zellij() {
   command -v zellij >/dev/null 2>&1 || return 1
   [[ -z "$ZELLIJ" ]] || return 1
@@ -79,8 +83,9 @@ export GTK_THEME=Adwaita:dark
 if [[ -z "$ZSHRC_SESSION_BOOTSTRAPPED" ]]; then
   export ZSHRC_SESSION_BOOTSTRAPPED=1
 
-  # Check for dotfile updates once
-  if command -v chezmoi >/dev/null 2>&1; then
+  # Check for dotfile updates once (skip in Copilot tool terminals — ephemeral
+  # contexts that trigger 1Password SSH auth and block command tracking)
+  if command -v chezmoi >/dev/null 2>&1 && ! _is_copilot_agent_terminal; then
     chezmoi update
   fi
 
@@ -101,36 +106,43 @@ fi
 
 source "${ZINIT_HOME}/zinit.zsh"
 
-# -----------------------------
-# fzf
-# -----------------------------
+# Skip heavy plugin initialization only in Copilot tool terminals
+if ! _is_copilot_agent_terminal; then
+  # -----------------------------
+  # fzf
+  # -----------------------------
 
-command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
+  command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
 
-# -----------------------------
-# completions
-# -----------------------------
+  # -----------------------------
+  # completions
+  # -----------------------------
 
-autoload -Uz compinit
+  autoload -Uz compinit
 
-if [[ ! -f ~/.zcompdump || ~/.zcompdump -ot ~/.zshrc ]]; then
-  compinit
+  if [[ ! -f ~/.zcompdump || ~/.zcompdump -ot ~/.zshrc ]]; then
+    compinit
+  else
+    compinit -C
+  fi
+
+  zinit cdreplay -q
+
+  zinit light Aloxaf/fzf-tab
+  zinit light zsh-users/zsh-autosuggestions
+  zinit light zsh-users/zsh-syntax-highlighting
+  zinit light zsh-users/zsh-completions
+  zinit light softmoth/zsh-vim-mode
+
+  zinit snippet OMZP::sudo
+  zinit snippet OMZP::dotenv
+  zinit snippet OMZP::colored-man-pages
+  zinit snippet OMZP::git
 else
+  # Fast minimal setup for Copilot tool terminals
+  autoload -Uz compinit
   compinit -C
 fi
-
-zinit cdreplay -q
-
-zinit light Aloxaf/fzf-tab
-zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light softmoth/zsh-vim-mode
-
-zinit snippet OMZP::sudo
-zinit snippet OMZP::dotenv
-zinit snippet OMZP::colored-man-pages
-zinit snippet OMZP::git
 
 # -----------------------------
 # history
@@ -153,17 +165,19 @@ setopt hist_find_no_dups
 # vi mode
 # -----------------------------
 
-VIM_MODE_TRACK_KEYMAP=no
-MODE_CURSOR_VIINS="#00ff00 blinking bar"
-MODE_CURSOR_REPLACE="$MODE_CURSOR_VIINS #ff0000"
-MODE_CURSOR_VICMD="green block"
-MODE_CURSOR_SEARCH="#ff00ff steady underline"
-MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
-MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
+if ! _is_copilot_agent_terminal; then
+  VIM_MODE_TRACK_KEYMAP=no
+  MODE_CURSOR_VIINS="#00ff00 blinking bar"
+  MODE_CURSOR_REPLACE="$MODE_CURSOR_VIINS #ff0000"
+  MODE_CURSOR_VICMD="green block"
+  MODE_CURSOR_SEARCH="#ff00ff steady underline"
+  MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+  MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
-bindkey -v
-bindkey "${terminfo[kcuu1]}" history-search-backward
-bindkey "${terminfo[kcud1]}" history-search-forward
+  bindkey -v
+  bindkey "${terminfo[kcuu1]}" history-search-backward
+  bindkey "${terminfo[kcud1]}" history-search-forward
+fi
 
 # -----------------------------
 # tools
@@ -177,7 +191,7 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-if command -v oh-my-posh >/dev/null 2>&1; then
+if command -v oh-my-posh >/dev/null 2>&1 && ! _is_copilot_agent_terminal; then
   eval "$(oh-my-posh init zsh --config "$HOME/.config/ohmyposh/mcribbs.toml")"
 fi
 
@@ -197,4 +211,37 @@ if _is_vscode && command -v code >/dev/null 2>&1; then
   if [[ -n "$_vscode_shell" && -f "$_vscode_shell" ]]; then
     source "$_vscode_shell"
   fi
+fi
+
+# Ensure command completion always emits an exit code for VS Code rich SI.
+# Patch after startup is complete so later SI scripts cannot overwrite it.
+if _is_copilot_agent_terminal; then
+  __vsc_patch_command_complete_once() {
+    typeset -f __vsc_command_complete >/dev/null 2>&1 || return 0
+    typeset -f __vsc_preexec >/dev/null 2>&1 || return 0
+
+    __vsc_preexec() {
+      PS1="$__vsc_prior_prompt"
+      PS2="$__vsc_prior_prompt2"
+      if [ -n "$RPROMPT" ]; then
+        RPROMPT="$__vsc_prior_rprompt"
+      fi
+      __vsc_in_command_execution="1"
+      __vsc_current_command="${1:-__copilot_execute_command__}"
+      __vsc_command_output_start
+    }
+
+    __vsc_command_complete() {
+      builtin printf '\e]633;D;%s\a' "${__vsc_status:-$?}"
+      __vsc_update_cwd
+      if [[ "${__vsc_in_command_execution:-}" == "1" ]]; then
+        __vsc_in_command_execution=""
+        __vsc_current_command=""
+      fi
+    }
+
+    precmd_functions=(${precmd_functions:#__vsc_patch_command_complete_once})
+  }
+
+  precmd_functions+=(__vsc_patch_command_complete_once)
 fi
