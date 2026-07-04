@@ -89,7 +89,7 @@ else
 fi
 
 ensure_tool git
-ensure_tool rg repgrep
+ensure_tool rg ripgrep
 
 if [ -d "$HOME/.fzf" ] || command -v fzf >/dev/null 2>&1; then
   echo "✅ fzf already installed"
