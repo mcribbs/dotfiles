@@ -214,8 +214,9 @@ if _is_vscode && command -v code >/dev/null 2>&1; then
 fi
 
 # Ensure command completion always emits an exit code for VS Code rich SI.
-# Patch after startup is complete so later SI scripts cannot overwrite it.
-if _is_copilot_agent_terminal; then
+# This custom hook override has caused command completion hangs in some
+# VS Code/Copilot terminal sessions. Keep it opt-in for troubleshooting only.
+if _is_copilot_agent_terminal && [[ "${COPILOT_ENABLE_VSC_SI_PATCH:-0}" == "1" ]]; then
   __vsc_patch_command_complete_once() {
     typeset -f __vsc_command_complete >/dev/null 2>&1 || return 0
     typeset -f __vsc_preexec >/dev/null 2>&1 || return 0
