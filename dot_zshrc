@@ -58,7 +58,11 @@ path=("$PNPM_HOME" $path)
 
 export ANDROID_HOME="$HOME/Android/sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+if [[ "$(uname)" == "Darwin" ]]; then
+  export JAVA_HOME=$(/usr/libexec/java_home -v 21 2>/dev/null)
+else
+  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+fi
 
 path=(
   "$JAVA_HOME/bin"
