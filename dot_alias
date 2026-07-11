@@ -30,7 +30,7 @@ alias df='df -kTh'
 if [[ -x htop ]]; then
   alias top='htop'
 fi
-alias npm='pnpm'
+#alias npm='pnpm'
 #alias vi='nvim'
 #alias vim='nvim'
 #alias gvi='open -a Neovim --args --cwd "$PWD" "$@"'
