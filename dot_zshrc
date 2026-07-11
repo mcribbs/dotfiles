@@ -62,14 +62,10 @@ _openclaw_dirs=(
 "$HOME/.npm-global/bin"
 )
 
-for _openclaw_bin in "${_openclaw_dirs[@]}"; do
-if [[ -x "$_openclaw_bin/openclaw" ]]; then
-path=("$_openclaw_bin" $path)
-break
-fi
-done
+# OpenClaw CLI
+[[ -x "$HOME/.npm-global/bin/openclaw" ]] &&
+path=("$HOME/.npm-global/bin" $path)
 
-unset _openclaw_bin _openclaw_dirs
 typeset -U path PATH
 
 export ANDROID_HOME="$HOME/Android/sdk"
