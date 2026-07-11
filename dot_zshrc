@@ -56,6 +56,20 @@ typeset -U path PATH
 export PNPM_HOME="$HOME/.local/share/pnpm"
 path=("$PNPM_HOME" $path)
 
+for _openclaw_bin in
+"$HOME/.openclaw/bin"
+"$HOME/.local/share/openclaw/bin"
+"$HOME/.npm-global/bin"
+do
+if [[ -x "$_openclaw_bin/openclaw" ]]; then
+path=("$_openclaw_bin" $path)
+break
+fi
+done
+unset _openclaw_bin
+
+typeset -U path PATH
+
 export ANDROID_HOME="$HOME/Android/sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 if [[ "$(uname)" == "Darwin" ]]; then
