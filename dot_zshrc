@@ -233,5 +233,5 @@ fi
 
 # OpenClaw Completion
 [ -f "/home/mcribbs/.openclaw/completions/openclaw.zsh" ] && source "/home/mcribbs/.openclaw/completions/openclaw.zsh"
-export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
-export OPENCLAW_NO_RESPAWN=1
+export NODE_COMPILE_CACHE="/var/tmp/openclaw-compile-cache"
+export OPENCLAW_NO_RESPAWN="1"
