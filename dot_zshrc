@@ -45,14 +45,15 @@ fi
 # PATH
 # -----------------------------
 
+# fzf
 path=(
   "$HOME/.fzf/bin"
   /usr/games
   $path
 )
-
 typeset -U path PATH
 
+# pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
 path=("$PNPM_HOME" $path)
 
@@ -61,6 +62,7 @@ _openclaw_dirs=(
 "$HOME/.local/share/openclaw/bin"
 "$HOME/.npm-global/bin"
 )
+typeset -U path PATH
 
 # OpenClaw CLI
 [[ -x "$HOME/.npm-global/bin/openclaw" ]] &&
@@ -68,6 +70,7 @@ path=("$HOME/.npm-global/bin" $path)
 
 typeset -U path PATH
 
+# Android dev
 export ANDROID_HOME="$HOME/Android/sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -82,7 +85,6 @@ path=(
   "$ANDROID_HOME/platform-tools"
   $path
 )
-
 typeset -U path PATH
 
 export GTK_THEME=Adwaita:dark
@@ -229,36 +231,5 @@ if _is_vscode && command -v code >/dev/null 2>&1; then
   fi
 fi
 
-# Ensure command completion always emits an exit code for VS Code rich SI.
-# This custom hook override has caused command completion hangs in some
-# VS Code/Copilot terminal sessions. Keep it opt-in for troubleshooting only.
-if _is_copilot_agent_terminal && [[ "${COPILOT_ENABLE_VSC_SI_PATCH:-0}" == "1" ]]; then
-  __vsc_patch_command_complete_once() {
-    typeset -f __vsc_command_complete >/dev/null 2>&1 || return 0
-    typeset -f __vsc_preexec >/dev/null 2>&1 || return 0
-
-    __vsc_preexec() {
-      PS1="$__vsc_prior_prompt"
-      PS2="$__vsc_prior_prompt2"
-      if [ -n "$RPROMPT" ]; then
-        RPROMPT="$__vsc_prior_rprompt"
-      fi
-      __vsc_in_command_execution="1"
-      __vsc_current_command="${1:-__copilot_execute_command__}"
-      __vsc_command_output_start
-    }
-
-    __vsc_command_complete() {
-      builtin printf '\e]633;D;%s\a' "${__vsc_status:-$?}"
-      __vsc_update_cwd
-      if [[ "${__vsc_in_command_execution:-}" == "1" ]]; then
-        __vsc_in_command_execution=""
-        __vsc_current_command=""
-      fi
-    }
-
-    precmd_functions=(${precmd_functions:#__vsc_patch_command_complete_once})
-  }
-
-  precmd_functions+=(__vsc_patch_command_complete_once)
-fi
+# OpenClaw Completion
+[ -f "/home/mcribbs/.openclaw/completions/openclaw.zsh" ] && source "/home/mcribbs/.openclaw/completions/openclaw.zsh"
