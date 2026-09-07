@@ -25,6 +25,7 @@ Host github.com
 
 {{- else }}
   # Forwarded agent / normal ssh-agent
+  IdentityFile ~/.ssh/github-dotfiles.pub
   IdentitiesOnly no
 
 {{- end }}
