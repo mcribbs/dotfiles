@@ -1,0 +1,247 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ARCH="$(uname -m)"
+OS="$(uname -s)"
+
+log() {
+  printf '%s\n' "$*"
+}
+
+die() {
+  printf 'ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+PACKAGE_MANAGER=""
+
+detect_package_manager() {
+  case "$OS" in
+    Darwin)
+      setup_brew
+      PACKAGE_MANAGER="brew"
+      ;;
+
+    Linux)
+      if command -v pacman >/dev/null 2>&1; then
+        PACKAGE_MANAGER="pacman"
+      elif command -v apt-get >/dev/null 2>&1; then
+        PACKAGE_MANAGER="apt"
+      else
+        die "No supported Linux package manager found"
+      fi
+      ;;
+
+    *)
+      die "Unsupported operating system: $OS"
+      ;;
+  esac
+}
+
+setup_brew() {
+  if command -v brew >/dev/null 2>&1; then
+    return
+  fi
+
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+}
+
+update_package_manager() {
+  case "$PACKAGE_MANAGER" in
+    brew)
+      log "🍺 Updating Homebrew..."
+      brew update
+      brew upgrade
+      ;;
+
+    apt)
+      log "📦 Updating apt packages..."
+      sudo apt-get update
+      sudo apt-get upgrade -y
+      ;;
+
+    pacman)
+      log "📦 Updating pacman packages..."
+      sudo pacman -Syu --noconfirm
+      ;;
+
+    *)
+      die "Unknown package manager: $PACKAGE_MANAGER"
+      ;;
+  esac
+}
+
+cleanup_package_manager() {
+  case "$PACKAGE_MANAGER" in
+    apt)
+      log "🧹 Removing unused apt dependencies..."
+      sudo apt-get autoremove -y
+
+      log "🧹 Cleaning obsolete apt package cache..."
+      sudo apt-get autoclean
+      ;;
+
+    pacman)
+      log "🧹 Checking for orphaned pacman packages..."
+
+      local orphans
+      orphans="$(pacman -Qtdq || true)"
+
+      if [[ -n "$orphans" ]]; then
+        printf '%s\n' "$orphans"
+        printf '%s\n' "$orphans" \
+          | sudo pacman -Rns --noconfirm -
+      else
+        log "✅ No orphaned pacman packages"
+      fi
+      ;;
+
+    brew)
+      log "🧹 Removing unused Homebrew dependencies..."
+      brew autoremove
+
+      log "🧹 Cleaning Homebrew..."
+      brew cleanup
+      ;;
+  esac
+}
+
+update_zellij() {
+  local installed
+  installed="$(command -v zellij 2>/dev/null || true)"
+
+  # Package-managed Zellij was already handled above.
+  [[ "$installed" == "$HOME/.local/bin/zellij" ]] || return 0
+
+  log "🪟 Checking Zellij..."
+
+  local archive
+  case "$ARCH" in
+    x86_64)
+      archive="zellij-x86_64-unknown-linux-musl.tar.gz"
+      ;;
+    aarch64 | arm64)
+      archive="zellij-aarch64-unknown-linux-musl.tar.gz"
+      ;;
+    *)
+      die "Unsupported architecture for Zellij: $ARCH"
+      ;;
+  esac
+
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+
+  curl -fL \
+    "https://github.com/zellij-org/zellij/releases/latest/download/${archive}" \
+    -o "$tmpdir/$archive"
+
+  tar -xzf "$tmpdir/$archive" -C "$tmpdir"
+
+  local current latest
+  current="$(zellij --version | awk '{print $2}')"
+  latest="$("$tmpdir/zellij" --version | awk '{print $2}')"
+
+  if [[ "$current" == "$latest" ]]; then
+    log "✅ Zellij already current: $current"
+  else
+    log "⬆️  Zellij $current → $latest"
+    install -m 0755 "$tmpdir/zellij" "$HOME/.local/bin/zellij"
+  fi
+
+  rm -rf "$tmpdir"
+}
+
+update_oh_my_posh() {
+  local installed
+  installed="$(command -v oh-my-posh 2>/dev/null || true)"
+
+  # Your Linux installer puts this here. Brew-owned copies are updated
+  # by brew upgrade above.
+  [[ "$installed" == "$HOME/.local/bin/oh-my-posh" ]] || return 0
+
+  log "🎨 Updating Oh My Posh..."
+  oh-my-posh upgrade
+}
+
+apt_package_available() {
+  local pkg="$1"
+  apt-cache show "$pkg" >/dev/null 2>&1
+}
+
+update_fastfetch() {
+  [[ "$OS" == "Linux" ]] || return 0
+  command -v apt-get >/dev/null 2>&1 || return 0
+
+  # If apt provides Fastfetch, apt upgrade already handled it.
+  apt_package_available fastfetch && return 0
+
+  command -v fastfetch >/dev/null 2>&1 || return 0
+
+  log "⚡ Checking Fastfetch..."
+
+  local deb_arch
+  case "$ARCH" in
+    x86_64)
+      deb_arch="amd64"
+      ;;
+    aarch64 | arm64)
+      deb_arch="aarch64"
+      ;;
+    *)
+      die "Unsupported architecture for Fastfetch: $ARCH"
+      ;;
+  esac
+
+  local deb="fastfetch-linux-${deb_arch}.deb"
+  local tmpdir
+  tmpdir="$(mktemp -d)"
+
+  curl -fL \
+    "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/${deb}" \
+    -o "$tmpdir/$deb"
+
+  local current latest
+  current="$(
+    dpkg-query -W -f='${Version}' fastfetch 2>/dev/null || true
+  )"
+  latest="$(dpkg-deb -f "$tmpdir/$deb" Version)"
+
+  if [[ "$current" == "$latest" ]]; then
+    log "✅ Fastfetch already current: $current"
+  else
+    log "⬆️  Fastfetch ${current:-not installed} → $latest"
+    sudo apt-get install -y "$tmpdir/$deb"
+  fi
+
+  rm -rf "$tmpdir"
+}
+
+log "-=-=-=-=-=-=-=-=-=-=-=-=-"
+log "Updating system"
+log "OS: $OS  ARCH: $ARCH"
+log "-=-=-=-=-=-=-=-=-=-=-=-=-"
+
+detect_package_manager
+
+log "Package manager: $PACKAGE_MANAGER"
+
+update_package_manager
+
+log ""
+log "Checking externally managed tools..."
+
+update_zellij
+update_oh_my_posh
+update_fastfetch
+
+log ""
+log "Cleaning up package manager..."
+
+cleanup_package_manager
+
+log ""
+log "✅ System update complete"
