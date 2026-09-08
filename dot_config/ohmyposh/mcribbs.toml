@@ -1,5 +1,5 @@
 console_title_template = '{{ .HostName }} / {{ .Folder }}'
-version = 3
+version = 4
 final_space = true
 
 [secondary_prompt]
@@ -31,8 +31,7 @@ final_space = true
     type = 'path'
     style = 'plain'
 
-    [blocks.segments.properties]
-      cache_duration = 'none'
+    [blocks.segments.options]
       style = 'full'
 
   [[blocks.segments]]
@@ -42,11 +41,9 @@ final_space = true
     type = 'git'
     style = 'plain'
 
-    [blocks.segments.properties]
+    [blocks.segments.options]
       branch_icon = ''
-      cache_duration = 'none'
       commit_icon = '@'
-      fetch_status = true
 
 [[blocks]]
   type = 'rprompt'
@@ -59,8 +56,7 @@ final_space = true
     type = 'executiontime'
     style = 'plain'
 
-    [blocks.segments.properties]
-      cache_duration = 'none'
+    [blocks.segments.options]
       threshold = 5000
 
 [[blocks]]
@@ -74,6 +70,3 @@ final_space = true
     type = 'text'
     style = 'plain'
     foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}magenta{{end}}']
-
-    [blocks.segments.properties]
-      cache_duration = 'none'
