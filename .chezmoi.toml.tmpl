@@ -1,3 +1,7 @@
+{{- if ne .chezmoi.os "windows" }}
+umask = 0o022
+{{- end }}
+
 [git]
 autoCommit = true
 autoPush = true
