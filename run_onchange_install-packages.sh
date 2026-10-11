@@ -117,6 +117,10 @@ package_name_for() {
   local tool="$1"
 
   case "$PACKAGE_MANAGER:$tool" in
+    pacman:gh)
+      printf '%s\n' "github-cli"
+      ;;
+
     brew:fortune)
       printf '%s\n' "fortune"
       ;;
@@ -226,11 +230,28 @@ install_fastfetch_deb() {
   rm -rf "$tmpdir"
 }
 
+install_github_cli_apt() {
+  # Use GitHub's maintained packages rather than Ubuntu's older gh release.
+  sudo mkdir -p -m 0755 /etc/apt/keyrings /etc/apt/sources.list.d
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+  sudo chmod 0644 /etc/apt/keyrings/githubcli-archive-keyring.gpg
+  printf 'deb [arch=%s signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\n' \
+    "$(dpkg --print-architecture)" \
+    | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+  sudo apt-get update
+  install_system_package gh
+}
+
 install_tool() {
   local tool="$1"
   local pkg
 
   case "$PACKAGE_MANAGER:$tool" in
+    apt:gh)
+      install_github_cli_apt
+      ;;
+
     brew:codex | apt:codex | pacman:codex)
       install_codex
       ;;
@@ -330,6 +351,7 @@ ensure_tool tar
 ensure_tool zsh
 ensure_tool unzip
 ensure_tool git
+ensure_tool gh
 ensure_tool rg ripgrep
 ensure_tool fzf
 ensure_tool zoxide
