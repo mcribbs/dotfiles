@@ -146,6 +146,25 @@ install_oh_my_posh() {
   fi
 }
 
+# Standalone Linux installers avoid a Node.js/npm dependency.
+install_codex() {
+  if [[ "$PACKAGE_MANAGER" == "brew" ]]; then
+    brew install --cask codex
+  else
+    curl -fsSL https://chatgpt.com/codex/install.sh \
+      | CODEX_NON_INTERACTIVE=1 CODEX_INSTALL_DIR="$HOME/.local/bin" sh
+  fi
+}
+
+install_copilot() {
+  if [[ "$PACKAGE_MANAGER" == "brew" ]]; then
+    brew install --cask copilot-cli
+  else
+    curl -fsSL https://gh.io/copilot-install \
+      | PREFIX="$HOME/.local" bash
+  fi
+}
+
 install_zellij_binary() {
   local archive
   local tmpdir
@@ -212,6 +231,14 @@ install_tool() {
   local pkg
 
   case "$PACKAGE_MANAGER:$tool" in
+    brew:codex | apt:codex | pacman:codex)
+      install_codex
+      ;;
+
+    brew:copilot | apt:copilot | pacman:copilot)
+      install_copilot
+      ;;
+
     brew:oh-my-posh | apt:oh-my-posh | pacman:oh-my-posh)
       install_oh_my_posh
       ;;
@@ -313,6 +340,8 @@ ensure_tool fortune fortune
 ensure_tool oh-my-posh oh-my-posh
 ensure_tool zellij
 ensure_tool fastfetch
+ensure_tool codex
+ensure_tool copilot
 
 set_zsh_as_default_shell
 install_figlet_font
