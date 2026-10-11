@@ -43,6 +43,21 @@ alias gitkraken='gitkraken --ozone-platform-hint=wayland --enable-features=UseOz
 
 # setup functions to wrap Windows ssh for 1Password integration
 if [[ -n "${WSL_DISTRO_NAME:-}" ]]; then
+  # Windows drive permissions often make every directory other-writable.
+  # Use normal directory colors there, keeping the warning on Linux paths.
+  # This follows the current directory, not paths passed as ls arguments.
+  _wsl_ls() {
+    case "$PWD" in
+      /mnt/[a-z]|/mnt/[a-z]/*)
+        LS_COLORS="${LS_COLORS}:ow=0" command ls "$@"
+        ;;
+      *)
+        command ls "$@"
+        ;;
+    esac
+  }
+  alias ls='_wsl_ls --color'
+
   function ssh { ssh.exe "$@"; }
   function scp { scp.exe "$@"; }
   function sftp { sftp.exe "$@"; }
