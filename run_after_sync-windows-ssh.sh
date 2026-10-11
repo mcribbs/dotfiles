@@ -13,7 +13,8 @@ WIN_SSH_DIR="$(wslpath -u "$WIN_USERPROFILE")/.ssh"
 
 mkdir -p "$WIN_SSH_DIR"
 
-for file in config known_hosts github-dotfiles.pub home-admin.pub; do
+# Windows SSH owns known_hosts; never overwrite its learned host keys.
+for file in config github-dotfiles.pub home-admin.pub; do
   if [ -f "$HOME/.ssh/$file" ]; then
     cp "$HOME/.ssh/$file" "$WIN_SSH_DIR/$file"
   fi
